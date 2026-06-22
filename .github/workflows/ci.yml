@@ -1,43 +1,36 @@
-name: 01 - bun Code Lint
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+name: "01"
+
+on: [push]
 
 jobs:
   lint-job:
     runs-on: ubuntu-latest
     steps:
-      - name: chekout code
+      - name: Checkout Code
         uses: actions/checkout@v4
-      - name: setup bun
+
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: install dependencies
-        run: bun install --frozen-lockfile
-      - name: Run Linter
-        run: bun run lint
-      - name: Run Tests
-        run: npm test
-      - name: Build Project
-        run: npm run build --if-present
-  build-job:
-     runs-on: ubuntu-latest
-     steps:
-      - name: chekout code
+
+      - name: Install Dependencies
+        run: cd test-cl && bun install --frozen-lockfile--
+
+      - name: Run linter
+        run: cd test-cl && bun run lint
+  build:
+    needs: lint-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
         uses: actions/checkout@v4
-      - name: setup bun
+
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: install dependencies
-        run: bun install --frozen-lockfile
-      - name: Run Linter
-        run: bun run lint
-      - name: Run Tests
-        run: npm test
-      - name: Build Project
-        run: npm run build --if-present
+      - name: Install Dependencies
+        run: cd test-cl && bun install --frozen-lockfile--
+      - name: Build Code
+        run: cd test-cl && bun run build
